@@ -1,0 +1,136 @@
+
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>ZAYRO AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--side:#0e1729;--panel:#121e32;--panel2:#192943;--line:#283b57;--txt:#edf4ff;--muted:#91a4bf;--blue:#66c5ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;min-height:100vh}
+.app{display:flex;min-height:100vh}
+.side{width:265px;background:var(--side);border-right:1px solid var(--line);padding:20px 15px;display:flex;flex-direction:column;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;padding:5px 7px}
+.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#a6eaff,#347ce7);display:grid;place-items:center;color:#08152a;font-weight:950;font-size:21px}
+.brand strong{letter-spacing:2px;font-size:18px}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1.7px;margin-top:2px}
+.new{padding:12px;border:1px solid #36547a;background:#172a45;color:var(--txt);border-radius:12px;text-align:left;cursor:pointer}
+.side-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#7186a5;padding:0 8px}
+.history{display:flex;flex-direction:column;gap:5px;overflow:auto}
+.history button{border:0;background:transparent;color:#b8c7dc;text-align:left;padding:10px;border-radius:9px;cursor:pointer;font-size:12px}
+.sidefoot{margin-top:auto;border-top:1px solid var(--line);padding:14px 8px;color:#7186a5;font-size:11px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px}
+.top span{color:#a9bad2;font-size:13px}
+.online{color:#94dfb7!important;border:1px solid #28533e;background:#10291f;padding:6px 9px;border-radius:20px}
+.content{width:min(850px,100%);margin:auto;flex:1;display:flex;flex-direction:column;padding:25px 22px 17px}
+.welcome{text-align:center;margin:auto 0 25px}
+.orb{width:65px;height:65px;margin:0 auto 18px;border-radius:22px;background:radial-gradient(circle at 30% 25%,#c5f0ff,#559ef0 50%,#254b9b);display:grid;place-items:center;color:#08162d;font-weight:950;font-size:30px}
+.welcome h1{font-size:clamp(29px,5vw,43px);margin:0 0 9px}
+.welcome h1 em{font-style:normal;color:var(--blue)}
+.welcome p{color:var(--muted);font-size:14px}
+.suggestions{width:min(620px,100%);margin:24px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.suggestion{background:var(--panel);border:1px solid var(--line);border-radius:13px;color:#dce9f8;text-align:left;padding:14px;cursor:pointer;font-size:13px}
+.suggestion small{display:block;color:var(--muted);margin-top:5px}
+.messages{display:flex;flex-direction:column;gap:21px;margin:0 0 18px}
+.msg{display:flex;gap:11px;align-items:flex-start}
+.avatar{width:30px;height:30px;flex:0 0 30px;border-radius:10px;background:#1a3455;color:var(--blue);display:grid;place-items:center;font-size:11px;font-weight:800}
+.msg.user{flex-direction:row-reverse}
+.bubble{font-size:14px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;padding-top:3px}
+.msg.user .bubble{max-width:82%;background:#172a45;border:1px solid #294363;border-radius:14px;padding:10px 13px}
+.composer-wrap{margin-top:auto}
+.composer{display:flex;align-items:flex-end;gap:9px;background:var(--panel);border:1px solid #304560;border-radius:17px;padding:9px}
+.composer textarea{flex:1;min-height:42px;max-height:150px;resize:none;border:0;outline:0;background:transparent;color:var(--txt);font:inherit;font-size:14px;padding:11px 8px}
+.send{width:42px;height:42px;border:0;border-radius:12px;background:linear-gradient(135deg,#72d0ff,#347de5);color:#07162c;font-size:20px;font-weight:900;cursor:pointer}
+.send:disabled{opacity:.45}
+.note{text-align:center;color:#71839d;font-size:10px;margin:9px}
+.mobile-brand{display:none}
+@media(max-width:700px){.side{display:none}.top{height:56px;padding:0 15px}.mobile-brand{display:block;font-weight:850;letter-spacing:1.5px}.content{padding:20px 13px 14px}.suggestions{grid-template-columns:1fr}.suggestion:nth-child(n+4){display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="brand"><div class="logo">Z</div><div><strong>ZAYRO</strong><small>ARTIFICIAL INTELLIGENCE</small></div></div>
+<button class="new" id="newChat">＋ Bisedë e re</button>
+<div><div class="side-label">Bisedat</div><div class="history" id="history">Bisedat e tua shfaqen këtu.</div></div>
+<div class="sidefoot">ZAYRO AI · Versioni fillestar<br>Bisedat ruhen në këtë pajisje.</div>
+</aside>
+<main class="main">
+<header class="top"><div class="mobile-brand">ZAYRO AI</div><span>Asistenti yt inteligjent</span><span class="online">● Gati</span></header>
+<section class="content">
+<div class="welcome" id="welcome">
+<div class="orb">Z</div>
+<h1>Mirë se vjen te <em>ZAYRO</em></h1>
+<p>Çfarë dëshiron të eksplorojmë sot?</p>
+<div class="suggestions">
+<button class="suggestion" data-prompt="Ma shpjego një temë të vështirë me fjalë të thjeshta.">✦ Shpjego diçka<small>Kupto tema të reja</small></button>
+<button class="suggestion" data-prompt="Më ndihmo të gjej një ide kreative për projekt.">✧ Gjej një ide<small>Krijo diçka të re</small></button>
+<button class="suggestion" data-prompt="Më ndihmo të shkruaj një mesazh profesional.">▤ Shkruaj diçka<small>Tekste dhe mesazhe</small></button>
+<button class="suggestion" data-prompt="Më mëso një aftësi të re hap pas hapi.">⌘ Mëso diçka<small>Hap pas hapi</small></button>
+</div>
+</div>
+<div class="messages" id="messages"></div>
+<div class="composer-wrap">
+<form class="composer" id="form">
+<textarea id="prompt" rows="1" placeholder="Shkruaji ZAYRO-s..."></textarea>
+<button class="send" id="send">↑</button>
+</form>
+<div class="note" id="note">ZAYRO AI · Asistenti yt</div>
+</div>
+</section>
+</main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const form=$('#form'),input=$('#prompt'),messages=$('#messages'),welcome=$('#welcome'),send=$('#send'),historyEl=$('#history');
+let chats=JSON.parse(localStorage.getItem('zayro_chats')||'[]'),activeId=null;
+function save(){localStorage.setItem('zayro_chats',JSON.stringify(chats))}
+function current(){return chats.find(c=>c.id===activeId)}
+function renderHistory(){
+historyEl.innerHTML='';
+if(!chats.length){historyEl.textContent='Bisedat e tua shfaqen këtu.';return}
+chats.slice().reverse().forEach(c=>{
+let b=document.createElement('button');b.textContent=c.title;b.onclick=()=>openChat(c.id);historyEl.append(b)
+});
+}
+function addMsg(text,role){
+let row=document.createElement('div');row.className='msg '+(role==='user'?'user':'assistant');
+let av=document.createElement('div');av.className='avatar';av.textContent=role==='user'?'TI':'Z';
+let bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;
+row.append(av,bubble);messages.append(row);
+}
+function openChat(id){
+activeId=id;let c=current();messages.innerHTML='';welcome.style.display='none';
+c.messages.forEach(m=>addMsg(m.text,m.role));renderHistory();
+}
+function newChat(){activeId=null;messages.innerHTML='';welcome.style.display='block';input.value='';renderHistory();input.focus()}
+function makeChat(text){
+let c={id:Date.now().toString(),title:text.slice(0,38),messages:[]};chats.push(c);activeId=c.id;return c;
+}
+async function submit(text){
+let value=(text??input.value).trim();if(!value||send.disabled)return;
+let c=current()||makeChat(value);
+c.messages.push({role:'user',text:value});welcome.style.display='none';addMsg(value,'user');
+input.value='';send.disabled=true;
+let wait=document.createElement('div');wait.textContent='ZAYRO po mendon…';messages.append(wait);
+try{
+let response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:c.messages.slice(-20)})});
+let data=await response.json();
+if(!response.ok)throw new Error(data.error||'Kërkesa nuk u krye.');
+let answer=data.reply||'Nuk mora përgjigje.';
+wait.remove();c.messages.push({role:'assistant',text:answer});addMsg(answer,'assistant');save();
+}catch(err){
+wait.remove();addMsg('ZAYRO ende nuk është lidhur me serverin AI. Duhet ta konfigurojmë serverin në hapin tjetër.','assistant');
+}finally{send.disabled=false;input.focus()}
+}
+form.addEventListener('submit',e=>{e.preventDefault();submit()});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit()}});
+$('#newChat').onclick=newChat;
+document.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>submit(b.dataset.prompt));
+renderHistory();
+</script>
+</body>
+</html>
