@@ -77,6 +77,12 @@ export default {
       }
     }
 
-    return env.ASSETS.fetch(request);
+    if (env.ASSETS) {
+  return env.ASSETS.fetch(request);
+}
+
+return new Response("ZAYRO AI is running. Assets binding is missing.", {
+  status: 500
+});
   }
 };
