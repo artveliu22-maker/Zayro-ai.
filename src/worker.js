@@ -3,6 +3,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // CHAT API
     if (url.pathname === "/api/chat") {
       if (request.method !== "POST") {
         return Response.json(
@@ -112,6 +113,78 @@ export default {
       }
     }
 
+    // IMAGE GENERATION API
+    if (url.pathname === "/api/image") {
+      if (request.method !== "POST") {
+        return Response.json(
+          { error: "Method not allowed." },
+          { status: 405 }
+        );
+      }
+
+      try {
+        if (!env.AI) {
+          return Response.json(
+            { error: "Cloudflare AI binding mungon." },
+            { status: 500 }
+          );
+        }
+
+        let body;
+
+        try {
+          body = await request.json();
+        } catch {
+          return Response.json(
+            { error: "JSON i pavlefshëm." },
+            { status: 400 }
+          );
+        }
+
+        const prompt = typeof body.prompt === "string"
+          ? body.prompt.trim()
+          : "";
+
+        if (!prompt || prompt.length > 1200) {
+          return Response.json(
+            {
+              error: "Përshkrimi duhet të ketë 1 deri në 1200 karaktere."
+            },
+            { status: 400 }
+          );
+        }
+
+        const result = await env.AI.run(
+          "@cf/black-forest-labs/flux-1-schnell",
+          {
+            prompt,
+            steps: 4
+          }
+        );
+
+        if (!result?.image) {
+          return Response.json(
+            { error: "Nuk u krijua fotografia." },
+            { status: 502 }
+          );
+        }
+
+        return Response.json({
+          image: "data:image/jpeg;base64," + result.image
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            error: "Gabim gjatë krijimit të fotografisë: " +
+              (error?.message || "Gabim i panjohur.")
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // UNKNOWN API ROUTES
     if (url.pathname.startsWith("/api/")) {
       return Response.json(
         { error: "API route nuk u gjet." },
@@ -119,82 +192,14 @@ export default {
       );
     }
 
+    // WEBSITE ASSETS
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
 
-    return new Response("ZAYRO AI is running. Assets binding is missing.", {
-      status: 500
-    });if (url.pathname.startsWith("/api/")) {
-      
-if (url.pathname === "/api/image") {
-  if (request.method !== "POST") {
-    return Response.json(
-      { error: "Method not allowed." },
-      { status: 405 }
-    );
-  }
-
-  try {
-    if (!env.AI) {
-      return Response.json(
-        { error: "Cloudflare AI binding mungon." },
-        { status: 500 }
-      );
-    }
-
-    let body;
-
-    try {
-      body = await request.json();
-    } catch {
-      return Response.json(
-        { error: "JSON i pavlefshëm." },
-        { status: 400 }
-      );
-    }
-
-    const prompt = typeof body.prompt === "string"
-      ? body.prompt.trim()
-      : "";
-
-    if (!prompt || prompt.length > 1200) {
-      return Response.json(
-        { error: "Përshkrimi duhet të ketë 1 deri në 1200 karaktere." },
-        { status: 400 }
-      );
-    }
-
-    const result = await env.AI.run(
-      "@cf/black-forest-labs/flux-1-schnell",
-      {
-        prompt,
-        steps: 4
-      }
-    );
-
-    if (!result?.image) {
-      return Response.json(
-        { error: "Nuk u krijua fotografia." },
-        { status: 502 }
-      );
-    }
-
-    return Response.json({
-      image: "data:image/jpeg;base64," + result.image
-    });
-
-  } catch (error) {
-    return Response.json(
-      {
-        error: "Gabim gjatë krijimit të fotografisë: " +
-          (error?.message || "Gabim i panjohur.")
-      },
+    return new Response(
+      "ZAYRO AI is running. Assets binding is missing.",
       { status: 500 }
     );
   }
-}
-
-  }
 };
-
